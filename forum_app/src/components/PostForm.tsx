@@ -2,9 +2,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-interface PostFormProps {
-  onPostCreated: () => void;
+export interface PostFormValues  {
+  id: number;
+  title: string;
+  content: string;
+  tags: string; 
 }
+
+interface PostFormProps {
+  onPostCreated: (newPost: PostFormValues ) => void;
+}
+
+
 
 const PostForm: React.FC<PostFormProps> = ({ onPostCreated }) => {
   const [title, setTitle] = useState<string>('');
@@ -13,12 +22,17 @@ const PostForm: React.FC<PostFormProps> = ({ onPostCreated }) => {
 
   const handlePost = async () => {
     try {
-      await axios.post('/api/posts', { title, content, tags: tags.split(',') });
-      console.log('Post created successfully!');
+      const response = await axios.post<PostFormValues >('http://localhost:3001/posts', {
+        title,
+        content,
+        tags,
+      });
+      const newPost: PostFormValues  = response.data;
+      console.log('Post created successfully:', newPost);
       setTitle('');
       setContent('');
       setTags('');
-      onPostCreated();
+      onPostCreated(newPost);
     } catch (error) {
       console.error('Error creating post:', error);
     }
@@ -64,5 +78,4 @@ const PostForm: React.FC<PostFormProps> = ({ onPostCreated }) => {
 };
 
 export default PostForm;
-
 

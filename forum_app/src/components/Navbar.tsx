@@ -36,7 +36,6 @@ const Navbar: React.FC = () => {
               Sign In 
             </Link>
           </li> 
-          {/* Add more navigation links as needed */}
         </ul>
       </div>
     </nav>

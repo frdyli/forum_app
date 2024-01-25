@@ -1,62 +1,79 @@
-// Post.tsx
-import React, { useState, useEffect } from 'react';
+// PostForm.tsx
+import React, { useState } from 'react';
 import axios from 'axios';
-import CommentForm from './CommentForm';
 
-interface Comment {
+interface PostFormProps {
+  onPostCreated: (newPost: Post) => void;
+}
+
+interface Post {
   id: number;
-  text: string;
+  title: string;
+  content: string;
+  tags?: string; // Assuming tags is an optional parameter
 }
 
-interface PostProps {
-  post: {
-    id: number;
-    title: string;
-    content: string;
-    tags: string[];
-  };
-}
+const PostForm: React.FC<PostFormProps> = ({ onPostCreated }) => {
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [tags, setTags] = useState<string>('');
 
-const Post: React.FC<PostProps> = ({ post }) => {
-  const [comments, setComments] = useState<Comment[]>([]);
-
-  useEffect(() => {
-    fetchComments();
-  }, []);
-
-  const fetchComments = async () => {
+  const handlePost = async () => {
     try {
-      const response = await axios.get(`/api/posts/${post.id}/comments`);
-      setComments(response.data);
+      const response = await axios.post<Post>('http://localhost:3001/posts', {
+        title,
+        content,
+        tags,
+      });
+      const newPost: Post = response.data;
+      console.log('Post created successfully:', newPost);
+      setTitle('');
+      setContent('');
+      setTags('');
+      onPostCreated(newPost);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error('Error creating post:', error);
     }
-  };
-
-  const handleCommentAdded = () => {
-    fetchComments();
   };
 
   return (
     <div className="mb-4">
-      <h2>{post.title}</h2>
-      <p>{post.content}</p>
-      <div>
-        <strong>Tags:</strong> {post.tags.join(', ')}
+      <h2>Create a Post</h2>
+      <div className="form-group">
+        <label htmlFor="title">Title:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
-      <CommentForm postId={post.id} onCommentAdded={handleCommentAdded} />
-      <div>
-        <h3>Comments</h3>
-        <ul className="list-group">
-          {comments.map((comment) => (
-            <li key={comment.id} className="list-group-item">
-              {comment.text}
-            </li>
-          ))}
-        </ul>
+      <div className="form-group">
+        <label htmlFor="content">Content:</label>
+        <textarea
+          className="form-control"
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
       </div>
+      <div className="form-group">
+        <label htmlFor="tags">Tags (comma-separated):</label>
+        <input
+          type="text"
+          className="form-control"
+          id="tags"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+        />
+      </div>
+      <button className="btn btn-primary" onClick={handlePost}>
+        Create Post
+      </button>
     </div>
   );
 };
 
-export default Post;
+export default PostForm;
+

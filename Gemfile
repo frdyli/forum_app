@@ -54,6 +54,11 @@ gem 'react-rails'
 gem 'pg_search'  
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
+gem 'rack-cors'
+
+group :development do
+  gem 'rack-cache'
+end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]

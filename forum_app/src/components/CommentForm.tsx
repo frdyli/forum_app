@@ -41,4 +41,3 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, onCommentAdded }) => 
 };
 
 export default CommentForm;
-

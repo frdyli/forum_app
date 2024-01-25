@@ -1,14 +1,22 @@
 Rails.application.routes.draw do
   get 'home/index'
-  root 'home#index' 
-  resources :users, only: [:create, :index] 
+  root 'home#index'
+  
+  resources :posts
   devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get '/posts', to: 'posts#index', defaults: { format: :json }
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  namespace :api do
+    post 'user/register', to: 'user#register'
+    post 'user/login', to: 'user#login'
+    post 'post/create', to: 'post#create'
+    post 'comment/create', to: 'comment#create'
+  end
+
+  # Remove the line below if not needed
+  # resources :users, only: [:create, :index]
+
+  get 'up' => 'rails/health#show', as: :rails_health_check
 end
+
