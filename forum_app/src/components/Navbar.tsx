@@ -33,14 +33,9 @@ const Navbar: React.FC = () => {
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/user">
-              Sign Up 
+              Sign In 
             </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/user/login">
-              Login 
-            </Link>
-          </li>
+          </li> 
           {/* Add more navigation links as needed */}
         </ul>
       </div>

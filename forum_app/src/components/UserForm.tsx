@@ -1,67 +1,66 @@
-// src/components/UserForm.tsx
+// UserForm.tsx
 import React, { useState } from 'react';
-import { loginUser, signupUser } from '../services/userService';
-import { useAuth } from '../context/authContext';
+import axios from 'axios';
+import { UserData } from '../../UserData';
 
 const UserForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { login } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRegister = async () => {
     try {
-      const userData = await loginUser(username, password);
-      login(userData);
-      console.log('User logged in successfully!');
-      // Add logic to redirect or show success message
+      await axios.post('/api/auth/register', { username, password });
+      console.log('User registered successfully!');
     } catch (error) {
-      console.error('Error logging in:', error);
-      // Add logic to handle error, show error message, etc.
+      console.error('Error registering user:', error);
     }
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
-      const userData = await signupUser(username, password);
-      login(userData);
-      console.log('User created and logged in successfully!');
-      // Add logic to redirect or show success message
+      await axios.post('/api/auth/login', { username, password });
+      console.log('Login successful!');
+      // Redirect or update authentication state
     } catch (error) {
-      console.error('Error creating user or logging in:', error);
-      // Add logic to handle error, show error message, etc.
+      console.error('Error logging in:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Login or Sign Up</h2>
-      <form onSubmit={handleLogin}>
-        <label>
+    <div className="container mt-5">
+      <h2>Welcome</h2>
+      <div className="mb-3">
+        <label htmlFor="username" className="form-label">
           Username:
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         </label>
-        <label>
+        <input
+          type="text"
+          className="form-control"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="password" className="form-label">
           Password:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
-        <button type="submit">Login</button>
-      </form>
-      <form onSubmit={handleSignup}>
-        <label>
-          Username:
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <button type="submit">Sign Up</button>
-      </form>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <button onClick={handleRegister} className="btn btn-primary">
+        Register
+      </button>
+      <button onClick={handleLogin} className="btn btn-primary ms-2">
+        Login
+      </button>
     </div>
   );
 };
 
 export default UserForm;
-

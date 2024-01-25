@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
   get 'home/index'
-  root 'home#index'
-  post '/login', to: 'authentication#login'
-  post '/signup', to: 'authentication#signup'
-
+  root 'home#index' 
   resources :users, only: [:create, :index] 
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
