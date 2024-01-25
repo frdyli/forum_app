@@ -1,11 +1,12 @@
 // UserForm.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { UserData } from '../../UserData';
+import { useNavigate } from 'react-router-dom';
 
 const UserForm: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
@@ -20,7 +21,8 @@ const UserForm: React.FC = () => {
     try {
       await axios.post('/api/auth/login', { username, password });
       console.log('Login successful!');
-      // Redirect or update authentication state
+      // Redirect to the forum page after successful login
+      navigate('/forum');
     } catch (error) {
       console.error('Error logging in:', error);
     }
@@ -64,3 +66,4 @@ const UserForm: React.FC = () => {
 };
 
 export default UserForm;
+
